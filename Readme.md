@@ -7,4 +7,4 @@ How to use
 
 2. ```npm i```
 
-3. ```npm run start``` or `` `` npm run start: dev``
+3. ```npm run start``` or ```npm run start: dev``
