@@ -9,6 +9,7 @@ import {OrderRouter} from "./routes/order";
 import {handlebarsHelpers} from "./utils/handlebars-helpers";
 import {COOKIE_BASES, COOKIE_ADDONS} from"./data/cookies-data";
 import {Entris} from "./types/entris";
+import {MyRouter} from "./types/my-router";
 
 
 
@@ -16,10 +17,12 @@ import {Entris} from "./types/entris";
 
 export class CookieMakerApp {
    private app: Application = express()
-    public data = {
+    public readonly data = {
         COOKIE_BASES,
         COOKIE_ADDONS,
     };
+
+   private readonly routers = [HomeRouter, ConfiguratorRouter, OrderRouter]
 
     constructor() {
         this._configureApp();
@@ -40,9 +43,10 @@ export class CookieMakerApp {
     }
 
     private _setRoutes(): void {
-        this.app.use('/', new HomeRouter(this).router);
-        this.app.use('/configurator', new ConfiguratorRouter(this).router);
-        this.app.use('/order', new OrderRouter(this).router);
+       for(const router of this.routers){
+           const newRouter: MyRouter =  new router(this)
+           this.app.use(newRouter.urlPrefix, newRouter.router)
+       }
     }
 
    private _run(): void {
