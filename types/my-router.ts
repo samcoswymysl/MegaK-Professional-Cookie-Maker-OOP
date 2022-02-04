@@ -1,6 +1,8 @@
 import {Router} from "express";
 
-export interface MyRouter {
-    readonly urlPrefix: string;
+export interface MyRouter{
     readonly router: Router
 }
+
+
+

@@ -9,20 +9,19 @@ import {OrderRouter} from "./routes/order";
 import {handlebarsHelpers} from "./utils/handlebars-helpers";
 import {COOKIE_BASES, COOKIE_ADDONS} from"./data/cookies-data";
 import {Entris} from "./types/entris";
-import {MyRouter} from "./types/my-router";
-
-
+import { MyRouter } from './types/my-router';
 
 
 
 export class CookieMakerApp {
-   private app: Application = express()
+    private app: Application = express()
     public readonly data = {
         COOKIE_BASES,
         COOKIE_ADDONS,
     };
 
-   private readonly routers = [HomeRouter, ConfiguratorRouter, OrderRouter]
+
+    private readonly routers = [HomeRouter, ConfiguratorRouter, OrderRouter]
 
     constructor() {
         this._configureApp();
@@ -42,27 +41,29 @@ export class CookieMakerApp {
         this.app.set('view engine', '.hbs');
     }
 
+
     private _setRoutes(): void {
-       for(const router of this.routers){
-           const newRouter: MyRouter =  new router(this)
-           this.app.use(newRouter.urlPrefix, newRouter.router)
-       }
+        for(const router of this.routers){
+            const newRouter: MyRouter =  new router(this)
+            const path: string = Reflect.get(router, 'urlPrefix')
+                this.app.use(path, newRouter.router)
+        }
     }
 
-   private _run(): void {
+    private _run(): void {
         this.app.listen(3000, '0.0.0.0', () => {
             console.log('Listening on :3000');
         });
     }
 
-     public showErrorPage(res: Response, description: string): void {
+    public showErrorPage(res: Response, description: string): void {
         res.render('error', {
             description,
         });
     }
 
 
-     public getAddonsFromReq(req: Request): string[] {
+    public getAddonsFromReq(req: Request): string[] {
         const {cookieAddons} = req.cookies as {
             cookieAddons: string
         };

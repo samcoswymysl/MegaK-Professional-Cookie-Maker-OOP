@@ -1,16 +1,18 @@
 import {Request, Response, Router} from 'express';
-import {CookieMakerApp} from "../index";
 import {MyRouter} from "../types/my-router";
-import {rest} from "../dorators/rest.decorators";
+import {get} from "../decorators/rest.decorators";
 import {BaseRouter} from "./baseRouter";
+import {urlPrefix} from "../decorators/urlPrefix";
 
 
-export class HomeRouter extends BaseRouter implements MyRouter   {
-    readonly urlPrefix = '/';
+@urlPrefix('/')
+export class HomeRouter extends BaseRouter implements MyRouter {
 
-    @rest('get', '/')
+
+    @get('/')
     private readonly home = (req: Request, res: Response): void => {
         const {sum, addons, base, allBases, allAddons} = this.cmapp.getCookieSettings(req);
+
 
         res.render('home/index', {
             cookie: {
@@ -23,4 +25,5 @@ export class HomeRouter extends BaseRouter implements MyRouter   {
         });
     };
 }
+
 

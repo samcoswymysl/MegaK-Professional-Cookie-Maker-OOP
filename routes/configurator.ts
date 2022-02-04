@@ -1,14 +1,15 @@
 import {Request, Response} from "express";
 import {MyRouter} from "../types/my-router";
-import {rest} from "../dorators/rest.decorators";
+import {get, rest} from "../decorators/rest.decorators";
 import { BaseRouter } from "./baseRouter";
+import {urlPrefix} from "../decorators/urlPrefix";
 
-
+@urlPrefix('/configurator')
 export class ConfiguratorRouter extends BaseRouter implements MyRouter {
-    readonly urlPrefix = '/configurator';
 
-    @rest('get', '/select-base/:baseName')
-   private selectBase = (req: Request, res: Response): void => {
+
+    @get( '/select-base/:baseName')
+    private selectBase = (req: Request, res: Response): void => {
         const {baseName} = req.params;
 
         if ( !(this.cmapp.data.COOKIE_BASES as Record<string, number>)[baseName]) {
@@ -22,7 +23,7 @@ export class ConfiguratorRouter extends BaseRouter implements MyRouter {
             });
     };
 
-    @rest('get','/add-addon/:addonName')
+    @get('/add-addon/:addonName')
     private addAddon = (req: Request, res: Response): void => {
         const {addonName}= req.params;
 
@@ -47,8 +48,8 @@ export class ConfiguratorRouter extends BaseRouter implements MyRouter {
             });
     };
 
-    @rest( 'get','/delete-addon/:addonName')
-   private deleteAddon= (req: Request, res: Response): void  => {
+    @get('/delete-addon/:addonName')
+    private deleteAddon= (req: Request, res: Response): void  => {
         const {addonName} = req.params;
 
         const oldAddons = this.cmapp.getAddonsFromReq(req);
@@ -66,6 +67,3 @@ export class ConfiguratorRouter extends BaseRouter implements MyRouter {
             });
     };
 }
-
-
-
